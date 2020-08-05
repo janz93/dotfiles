@@ -1,0 +1,127 @@
+SHELL 				= /bin/bash
+DOTFILES_DIR 		?= ~/dotfiles  
+DATE_DIR 			?= `date +%Y-%m-%d`
+OLD_DOTFILES_DIR 	?= ~/dotfiles_old
+DOT_FILES 			?= gitconfig zshrc oh-my-zsh vim vimrc asdf
+OS_PLATFORM			?= $(uname)
+
+.PHONY: backup
+backup: ## backup exsiting dotfiles
+	echo -n "Creating $old_dir/$date_dir for backup of any existing dotfiles in ~ ..."
+	mkdir -p $old_dir/$date_dir
+
+	for file in ${DOT_FILES}; do
+		echo "Move existing ${file} from ~ to $old_dir/$date_dir"
+		mv ~/.$file ~/dotfiles_old/$date_dir
+	done
+
+.PHONY: install_zsh
+install_zsh: install_brew ## install oh-my-zsh as bash alternative
+	# Test to see if zshell is installed.
+	if [ -f /bin/zsh -o -f /usr/bin/zsh ]; then
+		# Clone my oh-my-zsh repository from GitHub only if it isn't already present
+		echo "Oh my zsh already available. Good Job!"
+		if [[ ! -d $dir/system/oh-my-zsh/ ]]; then
+			git clone http://github.com/robbyrussell/oh-my-zsh.git
+		fi
+		# Set the default shell to zsh if it isn't currently set to zsh
+		if [[ ! $(echo $SHELL) == $(which zsh) ]]; then
+			chsh -s /bin/zsh
+		fi
+	else
+		# If zsh isn't installed, get the platform of the current machine
+		# If the platform is Linux, try an apt-get to install zsh and then recurse
+		if [[ $platform == 'Linux' ]]; then
+			if [[ -f /etc/redhat-release ]]; then
+				sudo yum install zsh
+				install_zsh
+			fi
+			if [[ -f /etc/debian_version ]]; then
+				sudo apt-get install zsh
+				install_zsh
+			fi
+		# If the platform is OS X, tell the user to install zsh :)
+		elif [[ $platform == 'Darwin' ]]; then
+			echo "Trying to install zsh throught homebrew!"
+			brew install zsh zsh-completions
+		fi
+	fi
+
+.PHONY: install_brew 
+install_brew: ## install brew if not already aviable
+	# if the platform is Linux
+	if [[ $platform == 'Linux' ]]; then
+		if [ -f ~/.linuxbrew ]; then
+			echo "Linuxbrew already available. Good Bier!"
+		else
+			git clone https://github.com/Linuxbrew/brew.git $dir/system/linuxbrew
+			echo 'PATH="$HOME/.linuxbrew/bin:$PATH"' >> ~/.zshrc
+			echo 'export MANPATH="$(brew --prefix)/share/man:$MANPATH"' >> ~/.zshrc
+			echo 'export INFOPATH="$(brew --prefix)/share/info:$INFOPATH"' >> ~/.zshrc
+		fi
+		# If the platform is OS X
+	elif [[ $platform == 'Darwin' ]]; then
+		if [ -f /usr/local/Homebrew/bin/brew ]; then
+			echo "Homebrew already available. Good Bier!"
+		else
+			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+			brew update
+			brew tap caskroom/cask
+			brew tap caskroom/versions
+		fi
+	fi
+
+.PHONY: install_tooling 
+install_tooling: install_brew ## install addition tooling
+	if [[ $platform == 'Darwin' ]]; then
+		brew bundle --file=$(DOTFILES_DIR)/install/Brewfile
+	elif [[ $platform == 'Linux' ]]; then
+		chmox +x $(DOTFILES_DIR)/install/tooling.sh && $(DOTFILES_DIR)/install/linux_tooling.sh
+	fi
+
+.PHONY: install_asdf 
+install_asdf: install_brew ## install asdf to manage programming languages
+	if [ -f ~/.asdf/asdf.sh ]; then
+		echo "asdf already available. Good job!"
+	else
+		if [[ $platform == 'Linux' ]]; then
+			if [[ -f /etc/redhat-release ]]; then
+				sudo apt install curl git
+			fi
+		elif [[ $platform == 'Darwin' ]]; then
+			brew install coreutils curl git
+		fi
+		brew install asdf
+		echo "add asdf to you shell"
+		echo '. $HOME/.asdf/asdf.sh' >> ~/.zshrc
+		echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.zshrc
+	fi
+
+
+.PHONY: create_symbolic_links
+create_symbolic_links: ## create symlics for all config files
+	ln -s ~/dotfiles/vim/vimrc ~/.vimrc
+	ln -s ~/dotfiles/system/asdfrc ~/.asdfrc
+	ln -s ~/dotfiles/system/zshrc ~/.zshrc
+	ln -s ~/dotfiles/system/oh-my-zsh ~/.oh-my-zsh
+	ln -s ~/dotfiles/tools/asdf ~/.asdf
+	ln -s ~/dotfiles/git/gitconfig ~/.gitconfig
+
+.PHONY: install_npm_packes
+install_npm_packes: install_npm ## install global npm tooling
+	. $(NVM_DIR)/nvm.sh; npm install -g $(shell cat install/npmfile)
+
+.PHONY: install_gems
+install_gems: install_ruby ## install global npm tooling
+	export PATH="/usr/local/opt/ruby/bin:$PATH"; gem install $(shell cat install/Gemfile)
+
+.PHONY: setup
+setup: backup install_zsh install_brew install_asdf install_tooling create_symbolic_links ## will setup your system
+	echo "everything should be good to go"
+
+# Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
+.PHONY: help
+help:
+	grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+.DEFAULT_GOAL := help
