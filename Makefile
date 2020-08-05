@@ -1,14 +1,14 @@
-SHELL 				= /bin/bash
 DOTFILES_DIR 		?= ~/dotfiles  
 DATE_DIR 			?= `date +%Y-%m-%d`
 OLD_DOTFILES_DIR 	?= ~/dotfiles_old
-DOT_FILES 			?= gitconfig zshrc oh-my-zsh vim vimrc asdf
-OS_PLATFORM			?= $(uname)
+DOT_FILES 			= gitconfig zshrc oh-my-zsh vim vimrc asdf
+OS_PLATFORM			:= $(shell uname)
+
 
 .PHONY: backup
 backup: ## backup exsiting dotfiles
-	echo -n "Creating $old_dir/$date_dir for backup of any existing dotfiles in ~ ..."
-	mkdir -p $old_dir/$date_dir
+	@echo "Creating ${OLD_DOTFILES_DIR}/${DATE_DIR} for backup of any existing dotfiles in ~ ..."
+	@mkdir -p ${OLD_DOTFILES_DIR}/${DATE_DIR}
 
 	@for file in ${DOT_FILES}; do\
 		echo "Move $$file from ~ to ${OLD_DOTFILES_DIR}/${DATE_DIR}";\
