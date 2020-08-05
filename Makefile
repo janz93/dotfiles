@@ -10,41 +10,30 @@ backup: ## backup exsiting dotfiles
 	echo -n "Creating $old_dir/$date_dir for backup of any existing dotfiles in ~ ..."
 	mkdir -p $old_dir/$date_dir
 
-	for file in ${DOT_FILES}; do
-		echo "Move existing ${file} from ~ to $old_dir/$date_dir"
-		mv ~/.$file ~/dotfiles_old/$date_dir
+	@for file in ${DOT_FILES}; do\
+		echo "Move $$file from ~ to ${OLD_DOTFILES_DIR}/${DATE_DIR}";\
+		mv ~/.$$file ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null ; true;\
 	done
 
 .PHONY: install_zsh
 install_zsh: install_brew ## install oh-my-zsh as bash alternative
-	# Test to see if zshell is installed.
-	if [ -f /bin/zsh -o -f /usr/bin/zsh ]; then
-		# Clone my oh-my-zsh repository from GitHub only if it isn't already present
-		echo "Oh my zsh already available. Good Job!"
-		if [[ ! -d $dir/system/oh-my-zsh/ ]]; then
-			git clone http://github.com/robbyrussell/oh-my-zsh.git
-		fi
-		# Set the default shell to zsh if it isn't currently set to zsh
-		if [[ ! $(echo $SHELL) == $(which zsh) ]]; then
-			chsh -s /bin/zsh
-		fi
-	else
-		# If zsh isn't installed, get the platform of the current machine
-		# If the platform is Linux, try an apt-get to install zsh and then recurse
-		if [[ $platform == 'Linux' ]]; then
-			if [[ -f /etc/redhat-release ]]; then
-				sudo yum install zsh
-				install_zsh
-			fi
-			if [[ -f /etc/debian_version ]]; then
-				sudo apt-get install zsh
-				install_zsh
-			fi
-		# If the platform is OS X, tell the user to install zsh :)
-		elif [[ $platform == 'Darwin' ]]; then
-			echo "Trying to install zsh throught homebrew!"
-			brew install zsh zsh-completions
-		fi
+	@if [ -f /bin/zsh -o -f /usr/bin/zsh ]; then\
+		echo "zsh already available. Good Job!";\
+		if [[ ! $(echo $SHELL) == $(which zsh) ]]; then\
+			echo "set default terminal to zsh";\
+			chsh -s /bin/zsh;\
+		fi;\
+	else\
+		if [[ $platform == 'Linux' ]]; then\
+			if [[ -f /etc/redhat-release ]]; then\
+				sudo yum install zsh;\
+			fi;\
+			if [[ -f /etc/debian_version ]]; then\
+				sudo apt-get install zsh;\
+			fi;\
+		elif [[ $platform == 'Darwin' ]]; then\
+			brew install zsh zsh-completions;\
+		fi;\
 	fi
 
 .PHONY: install_brew 
@@ -80,21 +69,21 @@ install_tooling: install_brew ## install addition tooling
 	fi
 
 .PHONY: install_asdf 
-install_asdf: install_brew ## install asdf to manage programming languages
-	if [ -f ~/.asdf/asdf.sh ]; then
-		echo "asdf already available. Good job!"
-	else
-		if [[ $platform == 'Linux' ]]; then
-			if [[ -f /etc/redhat-release ]]; then
-				sudo apt install curl git
-			fi
-		elif [[ $platform == 'Darwin' ]]; then
-			brew install coreutils curl git
-		fi
-		brew install asdf
-		echo "add asdf to you shell"
-		echo '. $HOME/.asdf/asdf.sh' >> ~/.zshrc
-		echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.zshrc
+install_asdf: install_brew install_zsh install_oh_my_zsh ## install asdf to manage programming languages
+	@if [ -f ~/.asdf/asdf.sh ]; then\
+		echo "asdf already available. Good job!";\
+	else\
+		if [[ $platform == 'Linux' ]]; then\
+			if [[ -f /etc/redhat-release ]]; then\
+				sudo apt install curl git;\
+			fi;\
+		elif [[ $platform == 'Darwin' ]]; then\
+			brew install coreutils curl git;\
+		fi;\
+		brew install asdf;\
+		echo "add asdf to you shell";\
+		echo '. $HOME/.asdf/asdf.sh' >> ~/.zshrc;\
+		echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.zshrc;\
 	fi
 
 
