@@ -15,6 +15,29 @@ backup: ## backup exsiting dotfiles
 		mv ~/.$$file ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null ; true;\
 	done
 
+.PHONY: install_brew 
+install_brew: ## install brew if not already aviable
+	@if [[ ${OS_PLATFORM} == 'Linux' ]]; then\
+		if [ -f ~/.linuxbrew ]; then\
+			echo "Linuxbrew already available. Good Bier!";\
+		else\
+			git clone https://github.com/Linuxbrew/brew.git $dir/system/linuxbrew;\
+			echo 'PATH="$HOME/.linuxbrew/bin:$PATH"' >> ~/.zshrc;\
+			echo 'export MANPATH="$(brew --prefix)/share/man:$MANPATH"' >> ~/.zshrc;\
+			echo 'export INFOPATH="$(brew --prefix)/share/info:$INFOPATH"' >> ~/.zshrc;\
+		fi;\
+	elif [[ ${OS_PLATFORM} == 'Darwin' ]]; then\
+		if [ -f /usr/local/Homebrew/bin/brew ]; then\
+			echo "Homebrew already available. Good Bier!";\
+		else\
+			xcode-select —-install;\
+			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)";\
+			brew update;\
+			brew tap caskroom/cask;\
+			brew tap caskroom/versions;\
+		fi;\
+	fi
+
 .PHONY: install_zsh
 install_zsh: install_brew ## install oh-my-zsh as bash alternative
 	@if [ -f /bin/zsh -o -f /usr/bin/zsh ]; then\
@@ -36,29 +59,14 @@ install_zsh: install_brew ## install oh-my-zsh as bash alternative
 		fi;\
 	fi
 
-.PHONY: install_brew 
-install_brew: ## install brew if not already aviable
-	# if the platform is Linux
-	if [[ $platform == 'Linux' ]]; then
-		if [ -f ~/.linuxbrew ]; then
-			echo "Linuxbrew already available. Good Bier!"
-		else
-			git clone https://github.com/Linuxbrew/brew.git $dir/system/linuxbrew
-			echo 'PATH="$HOME/.linuxbrew/bin:$PATH"' >> ~/.zshrc
-			echo 'export MANPATH="$(brew --prefix)/share/man:$MANPATH"' >> ~/.zshrc
-			echo 'export INFOPATH="$(brew --prefix)/share/info:$INFOPATH"' >> ~/.zshrc
-		fi
-		# If the platform is OS X
-	elif [[ $platform == 'Darwin' ]]; then
-		if [ -f /usr/local/Homebrew/bin/brew ]; then
-			echo "Homebrew already available. Good Bier!"
-		else
-			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-			brew update
-			brew tap caskroom/cask
-			brew tap caskroom/versions
-		fi
-	fi
+.PHONY: install_oh_my_zsh
+install_oh_my_zsh: install_zsh
+	@if [[ -d $dir/system/oh-my-zsh/ ]]; then
+		echo "Oh my zsh already available. Good Job!";\
+	else\
+		sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    fi
+	
 
 .PHONY: install_tooling 
 install_tooling: install_brew ## install addition tooling
