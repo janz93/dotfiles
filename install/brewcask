@@ -1,0 +1,8 @@
+tap "homebrew/cask"
+
+# global
+cask "docker"
+cask "spotify"
+cask "visual-studio-code"
+cask "aws-vault"
+cask "insomnia"

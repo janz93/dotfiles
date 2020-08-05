@@ -1,0 +1,15 @@
+tap "heroku/brew"
+
+# global
+brew "coreutils"
+brew "curl"
+brew "git"
+brew "asdf"
+brew "jq"
+brew "heroku"
+brew "awscli"
+
+
+# visable
+tap "wlw/tools" https://gitlab.visable.com/webdevs/homebrew-wlw.git
+brew "wlw-devtools"
