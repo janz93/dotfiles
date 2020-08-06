@@ -163,7 +163,7 @@ install_gems: install_ruby ## install global npm tooling
 	sh -c "install/gems.sh"
 
 .PHONY: setup
-setup: backup install_zsh install_brew install_asdf install_tooling create_symbolic_links ## will setup your system
+setup: backup install_brew install_zsh install_oh_my_zsh install_asdf install_tooling install_gems install_npm_packages configure_git configure_vim ## will setup your system
 	echo "everything should be good to go"
 
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
