@@ -1,4 +1,4 @@
-DOTFILES_DIR 		?= ~/dotfiles  
+DOTFILES_DIR 		?= ~/dotfiles
 DATE_DIR 			?= `date +%Y-%m-%d`
 OLD_DOTFILES_DIR 	?= ~/dotfiles_old
 DOT_FILES 			= gitconfig zshrc oh-my-zsh vim vimrc asdf
@@ -47,24 +47,24 @@ install_zsh: install_brew ## install oh-my-zsh as bash alternative
 			chsh -s /bin/zsh;\
 		fi;\
 	else\
-		if [[ $platform == 'Linux' ]]; then\
+		if [[ ${OS_PLATFORM} == 'Linux' ]]; then\
 			if [[ -f /etc/redhat-release ]]; then\
 				sudo yum install zsh;\
 			fi;\
 			if [[ -f /etc/debian_version ]]; then\
 				sudo apt-get install zsh;\
 			fi;\
-		elif [[ $platform == 'Darwin' ]]; then\
+		elif [[ ${OS_PLATFORM} == 'Darwin' ]]; then\
 			brew install zsh zsh-completions;\
 		fi;\
 	fi
 
 .PHONY: install_oh_my_zsh
 install_oh_my_zsh: install_zsh
-	@if [[ -d $dir/system/oh-my-zsh/ ]]; then
+	@if [[ -d ~/.oh-my-zsh/ ]]; then\
 		echo "Oh my zsh already available. Good Job!";\
 	else\
-		sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+		sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";\
     fi
 	
 
@@ -81,13 +81,15 @@ install_asdf: install_brew install_zsh install_oh_my_zsh ## install asdf to mana
 	@if [ -f ~/.asdf/asdf.sh ]; then\
 		echo "asdf already available. Good job!";\
 	else\
-		if [[ $platform == 'Linux' ]]; then\
+		echo "install prerequisites";\
+		if [[ ${OS_PLATFORM} == 'Linux' ]]; then\
 			if [[ -f /etc/redhat-release ]]; then\
 				sudo apt install curl git;\
 			fi;\
-		elif [[ $platform == 'Darwin' ]]; then\
+		elif [[ ${OS_PLATFORM} == 'Darwin' ]]; then\
 			brew install coreutils curl git;\
 		fi;\
+		echo "install asdf";\
 		brew install asdf;\
 		echo "add asdf to you shell";\
 		echo '. $HOME/.asdf/asdf.sh' >> ~/.zshrc;\
