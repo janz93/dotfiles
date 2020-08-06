@@ -1,0 +1,12 @@
+[user]
+	name = Jan Zaydowicz
+	email = jan.zaydowicz@googlemail.com
+
+[core]
+	editor = vim
+
+[github]
+	user = janz93
+
+[color]
+	ui = true

@@ -1,0 +1,5 @@
+[includeIf "gitdir:~/documents/private/"]
+    path = ~/documents/private/.gitconfig
+
+[includeIf "gitdir:~/documents/visable/"]
+    path = ~/documents/visable/.gitconfig

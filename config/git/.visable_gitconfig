@@ -1,0 +1,9 @@
+[user]
+	name = Jan Zaydowicz
+	email = jan.zaydowicz@visable.com
+
+[core]
+	editor = vim
+
+[color]
+	ui = true

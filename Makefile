@@ -1,7 +1,7 @@
 DOTFILES_DIR 		?= ~/dotfiles
 DATE_DIR 			?= `date +%Y-%m-%d`
 OLD_DOTFILES_DIR 	?= ~/dotfiles_old
-DOT_FILES 			= gitconfig zshrc oh-my-zsh vim vimrc asdf
+DOT_FILES 			= gitconfig zshrc vim vimrc asdfrc
 OS_PLATFORM			:= $(shell uname)
 RUBY_VERSION		= 2.7.1
 NODEJS_VERSION		= 14.7.0
@@ -41,7 +41,7 @@ install_brew: ## install brew if not already aviable
 	fi
 
 .PHONY: install_zsh
-install_zsh: install_brew ## install oh-my-zsh as bash alternative
+install_zsh: backup install_brew ## install zsh as bash alternative
 	@if [ -f /bin/zsh -o -f /usr/bin/zsh ]; then\
 		echo "zsh already available. Good Job!";\
 		if [[ ! $(echo $SHELL) == $(which zsh) ]]; then\
@@ -68,6 +68,15 @@ install_oh_my_zsh: install_zsh
 	else\
 		sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";\
     fi
+	echo "powerline fonts";\
+	tmp_dir=$(shell mktemp -d);\
+	echo $$tmp_dir;\
+	cd $$tmp_dir;\
+	git clone https://github.com/powerline/fonts.git ;\
+	./fonts/install.sh;\
+	rm -Rf $$tmp_dir;\
+	echo "copy personal zsh config"
+	ln -s ~/dotfiles/config/.zshrc ~/.zshrc
 	
 
 .PHONY: install_tooling 
@@ -82,8 +91,8 @@ install_tooling: install_brew ## install addition tooling
 	fi
 
 .PHONY: install_asdf 
-install_asdf: install_brew install_zsh install_oh_my_zsh ## install asdf to manage programming languages
-	@if [ -f ~/.asdf/asdf.sh ]; then\
+install_asdf: backup install_brew install_zsh install_oh_my_zsh ## install asdf to manage programming languages
+	@if [ -f $$(brew --prefix asdf)/asdf.sh ]; then\
 		echo "asdf already available. Good job!";\
 	else\
 		echo "install prerequisites";\
@@ -97,19 +106,26 @@ install_asdf: install_brew install_zsh install_oh_my_zsh ## install asdf to mana
 		echo "install asdf";\
 		brew install asdf;\
 		echo "add asdf to you shell";\
-		echo '. $HOME/.asdf/asdf.sh' >> ~/.zshrc;\
-		echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.zshrc;\
+		echo -e '\n. $$(brew --prefix asdf)/asdf.sh' >> ~/.zshrc;\
 	fi
+	echo "copy personal asdf config"
+	ln -s ~/dotfiles/config/.asdfrc ~/.asdfrc
 
 
-.PHONY: create_symbolic_links
-create_symbolic_links: ## create symlics for all config files
+.PHONY: configure_vim
+configure_vim: backup ## add personal vim configuration
 	ln -s ~/dotfiles/vim/vimrc ~/.vimrc
-	ln -s ~/dotfiles/system/asdfrc ~/.asdfrc
-	ln -s ~/dotfiles/system/zshrc ~/.zshrc
-	ln -s ~/dotfiles/system/oh-my-zsh ~/.oh-my-zsh
+	ln -s ~/dotfiles/vim/spell ~/.vim/spell
+
+.PHONY: configure_git
+configure_git: backup ## add personal git configuration
 	ln -s ~/dotfiles/tools/asdf ~/.asdf
 	ln -s ~/dotfiles/git/gitconfig ~/.gitconfig
+	mkdir -p ~/documents/private/
+	ln -s ~/dotfiles/git/gitconfig ~/documents/private/.gitconfig
+	mkdir -p ~/documents/visable/
+	ln -s ~/dotfiles/git/gitconfig ~/documents/visable/.gitconfig
+
 .PHONY: install_node
 install_node: install_asdf ## install programming language nodejs
 	@if [[ $$(asdf plugin list) == *"nodejs"* ]]; then\
