@@ -3,6 +3,8 @@ DATE_DIR 			?= `date +%Y-%m-%d`
 OLD_DOTFILES_DIR 	?= ~/dotfiles_old
 DOT_FILES 			= gitconfig zshrc oh-my-zsh vim vimrc asdf
 OS_PLATFORM			:= $(shell uname)
+RUBY_VERSION		= 2.7.1
+NODEJS_VERSION		= 14.7.0
 
 
 .PHONY: backup
@@ -105,14 +107,41 @@ create_symbolic_links: ## create symlics for all config files
 	ln -s ~/dotfiles/system/oh-my-zsh ~/.oh-my-zsh
 	ln -s ~/dotfiles/tools/asdf ~/.asdf
 	ln -s ~/dotfiles/git/gitconfig ~/.gitconfig
+.PHONY: install_node
+install_node: install_asdf ## install programming language nodejs
+	@if [[ $$(asdf plugin list) == *"nodejs"* ]]; then\
+		echo "nodejs via asdf already available. Good job!";\
+	else\
+		echo "add nodejs to asdf";\
+		asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git;\
+		echo "add nodejs PGP keys";\
+		sh -c "$$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring";\
+		echo "install nodejs ${NODEJS_VERSION}";\
+		asdf install nodejs ${NODEJS_VERSION};\
+		asdf global nodejs ${NODEJS_VERSION};\
+	fi
+	exec $$SHELL
 
-.PHONY: install_npm_packes
-install_npm_packes: install_npm ## install global npm tooling
-	. $(NVM_DIR)/nvm.sh; npm install -g $(shell cat install/npmfile)
+.PHONY: install_npm_packages
+install_npm_packages: install_node ## install global npm tooling
+	sh -c "install/npm_packages.sh"
+
+.PHONY: install_ruby
+install_ruby: install_asdf ## install programming language ruby
+	@if [[ $$(asdf plugin list) == *"ruby"* ]]; then\
+		echo "ruby via asdf already available. Good job!";\
+	else\
+		echo "add ruby to asdf";\
+		asdf plugin add ruby;\
+		echo "install ruby ${RUBY_VERSION}";\
+		asdf install ruby ${RUBY_VERSION};\
+		asdf global ruby ${RUBY_VERSION};\
+	fi
+	exec $$SHELL
 
 .PHONY: install_gems
 install_gems: install_ruby ## install global npm tooling
-	export PATH="/usr/local/opt/ruby/bin:$PATH"; gem install $(shell cat install/Gemfile)
+	sh -c "install/gems.sh"
 
 .PHONY: setup
 setup: backup install_zsh install_brew install_asdf install_tooling create_symbolic_links ## will setup your system
