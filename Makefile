@@ -1,4 +1,4 @@
-DOTFILES_DIR 		?= ~/dotfiles
+DOTFILES_DIR 		?= ~/.dotfiles
 DATE_DIR 			?= `date +%Y-%m-%d`
 OLD_DOTFILES_DIR 	?= ~/dotfiles_old
 DOT_FILES 			= gitconfig zshrc vim vimrc asdfrc
@@ -15,7 +15,13 @@ backup: ## backup exsiting dotfiles
 	@for file in ${DOT_FILES}; do\
 		echo "Move $$file from ~ to ${OLD_DOTFILES_DIR}/${DATE_DIR}";\
 		mv ~/.$$file ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null ; true;\
+		rm -f ~/.$$file;\
 	done
+	@mv ~/documents/private/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
+	@rm -f ~/documents/private/.gitconfig
+	@mv ~/documents/visable/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
+	@rm -f ~/documents/visable/.gitconfig
+	
 
 .PHONY: install_brew 
 install_brew: ## install brew if not already aviable
@@ -67,16 +73,16 @@ install_oh_my_zsh: install_zsh
 		echo "Oh my zsh already available. Good Job!";\
 	else\
 		sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";\
+		echo "powerline fonts";\
+		tmp_dir=$(shell mktemp -d);\
+		echo $$tmp_dir;\
+		cd $$tmp_dir;\
+		git clone https://github.com/powerline/fonts.git ;\
+		./fonts/install.sh;\
+		rm -Rf $$tmp_dir;\
     fi
-	echo "powerline fonts";\
-	tmp_dir=$(shell mktemp -d);\
-	echo $$tmp_dir;\
-	cd $$tmp_dir;\
-	git clone https://github.com/powerline/fonts.git ;\
-	./fonts/install.sh;\
-	rm -Rf $$tmp_dir;\
-	echo "copy personal zsh config"
-	ln -s ~/dotfiles/config/.zshrc ~/.zshrc
+	@echo "copy personal zsh config"
+	@ln -s ${DOTFILES_DIR}/config/.zshrc ~/.zshrc
 	
 
 .PHONY: install_tooling 
@@ -108,23 +114,24 @@ install_asdf: backup install_brew install_zsh install_oh_my_zsh ## install asdf 
 		echo "add asdf to you shell";\
 		echo -e '\n. $$(brew --prefix asdf)/asdf.sh' >> ~/.zshrc;\
 	fi
-	echo "copy personal asdf config"
-	ln -s ~/dotfiles/config/.asdfrc ~/.asdfrc
+	@echo "copy personal asdf config"
+	@ln -s ${DOTFILES_DIR}/config/.asdfrc ~/.asdfrc
 
 
 .PHONY: configure_vim
 configure_vim: backup ## add personal vim configuration
-	ln -s ~/dotfiles/vim/vimrc ~/.vimrc
-	ln -s ~/dotfiles/vim/spell ~/.vim/spell
+	@echo "copy personal vim config"
+	@ln -s ${DOTFILES_DIR}/config/vim/vimrc ~/.vimrc
+	@ln -s ${DOTFILES_DIR}/config/vim ~/.vim
 
 .PHONY: configure_git
 configure_git: backup ## add personal git configuration
-	ln -s ~/dotfiles/tools/asdf ~/.asdf
-	ln -s ~/dotfiles/git/gitconfig ~/.gitconfig
-	mkdir -p ~/documents/private/
-	ln -s ~/dotfiles/git/gitconfig ~/documents/private/.gitconfig
-	mkdir -p ~/documents/visable/
-	ln -s ~/dotfiles/git/gitconfig ~/documents/visable/.gitconfig
+	@echo "copy personal git config" 
+	@ln -s ${DOTFILES_DIR}/config/git/gitconfig ~/.gitconfig
+	@mkdir -p ~/documents/private/
+	@ln -s ${DOTFILES_DIR}/config/git/gitconfig ~/documents/private/.gitconfig
+	@mkdir -p ~/documents/visable/
+	@ln -s ${DOTFILES_DIR}/config/git/gitconfig ~/documents/visable/.gitconfig
 
 .PHONY: install_node
 install_node: install_asdf ## install programming language nodejs
@@ -139,11 +146,11 @@ install_node: install_asdf ## install programming language nodejs
 		asdf install nodejs ${NODEJS_VERSION};\
 		asdf global nodejs ${NODEJS_VERSION};\
 	fi
-	exec $$SHELL
 
 .PHONY: install_npm_packages
 install_npm_packages: install_node ## install global npm tooling
-	sh -c "install/npm_packages.sh"
+	@echo "install npm packages"
+	@sh -c "install/npm_packages.sh"
 
 .PHONY: install_ruby
 install_ruby: install_asdf ## install programming language ruby
@@ -156,15 +163,16 @@ install_ruby: install_asdf ## install programming language ruby
 		asdf install ruby ${RUBY_VERSION};\
 		asdf global ruby ${RUBY_VERSION};\
 	fi
-	exec $$SHELL
 
 .PHONY: install_gems
 install_gems: install_ruby ## install global npm tooling
-	sh -c "install/gems.sh"
+	@echo "install gems"
+	@sh -c "install/gems.sh"
 
 .PHONY: setup
 setup: backup install_brew install_zsh install_oh_my_zsh install_asdf install_tooling install_gems install_npm_packages configure_git configure_vim ## will setup your system
-	echo "everything should be good to go"
+	@echo "everything should be good to go"
+	@exec $$SHELL
 
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 .PHONY: help
