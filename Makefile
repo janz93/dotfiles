@@ -72,10 +72,13 @@ install_oh_my_zsh: install_zsh
 
 .PHONY: install_tooling 
 install_tooling: install_brew ## install addition tooling
-	if [[ $platform == 'Darwin' ]]; then
-		brew bundle --file=$(DOTFILES_DIR)/install/Brewfile
-	elif [[ $platform == 'Linux' ]]; then
-		chmox +x $(DOTFILES_DIR)/install/tooling.sh && $(DOTFILES_DIR)/install/linux_tooling.sh
+	@if [[ ${OS_PLATFORM} == 'Darwin' ]]; then\
+		echo "install terminal apps";\
+		brew bundle --file=$$(pwd)/install/mac/brewfile;\
+		echo "install gui apps";\
+		brew bundle --file=$$(pwd)/install/mac/brewcask;\
+	elif [[ ${OS_PLATFORM} == 'Linux' ]]; then\
+		sh -c $(DOTFILES_DIR)/install/linux_tooling.sh;\
 	fi
 
 .PHONY: install_asdf 
