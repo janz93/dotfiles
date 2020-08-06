@@ -1,0 +1,13 @@
+tap "homebrew/cask"
+
+# global
+cask "android-file-transfer"
+cask "aws-vault"
+cask "docker"
+cask "insomnia"
+cask "spotify"
+cask "slack"
+cask "visual-studio-code"
+
+# visable
+cask "mattermost"
