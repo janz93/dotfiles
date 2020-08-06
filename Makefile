@@ -121,7 +121,7 @@ install_asdf: backup install_brew install_zsh install_oh_my_zsh ## install asdf 
 .PHONY: configure_vim
 configure_vim: backup ## add personal vim configuration
 	@echo "copy personal vim config"
-	@ln -s ${DOTFILES_DIR}/config/vim/vimrc ~/.vimrc
+	@ln -snf ${DOTFILES_DIR}/config/vim/vimrc ~/.vimrc
 	@ln -s ${DOTFILES_DIR}/config/vim ~/.vim
 
 .PHONY: configure_git
