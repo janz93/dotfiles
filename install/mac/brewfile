@@ -12,4 +12,4 @@ brew "pgcli"
 
 # visable
 tap "wlw/tools", "https://gitlab.visable.com/webdevs/homebrew-wlw.git"
-# brew "wlw-devtools"
+brew "wlw-devtools"
