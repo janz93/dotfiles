@@ -1,3 +1,8 @@
+[pull]
+	ff = only
+[pager]
+	branch = false
+
 [includeIf "gitdir:~/documents/private/"]
     path = ~/documents/private/.gitconfig
 
