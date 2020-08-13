@@ -190,6 +190,14 @@ setup: backup install_brew install_zsh install_oh_my_zsh install_asdf install_to
 	@echo "everything should be good to go"
 	@exec $$SHELL
 
+.PHONY: update_dynamic_configs
+update_dynamic_configs: ## Here the current version of the dictionary and brew lock files will be commited
+	@cp ~/.vim/spell/* config/vim/spell/
+	@cp ~/.dotfiles/install/mac/brewfile.lock.json install/mac/brewfile.lock.json
+	@if [[ ${OS_PLATFORM} == 'Darwin' ]]; then\
+		cp ~/.dotfiles/install/mac/brewcask.lock.json install/mac/brewcask.lock.json;\
+	fi
+
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 .PHONY: help
 help:
