@@ -5,7 +5,11 @@ DOT_FILES 			= gitconfig zshrc vim vimrc asdfrc
 OS_PLATFORM			:= $(shell uname)
 RUBY_VERSION		= 2.7.1
 NODEJS_VERSION		= 14.7.0
-
+ifeq ($(OS_PLATFORM), Linux)
+	VSCODE_DIR = ~/.config/Code/User
+else
+	VSCODE_DIR = ~/Library/Application\ Support/Code/User
+endif
 
 .PHONY: backup
 backup: ## backup exsiting dotfiles
@@ -21,6 +25,10 @@ backup: ## backup exsiting dotfiles
 	@rm -f ~/documents/private/.gitconfig
 	@mv ~/documents/visable/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
 	@rm -f ~/documents/visable/.gitconfig
+	@mv ${VSCODE_DIR} ${OLD_DOTFILES_DIR}/${DATE_DIR}/vs_code/settings.json 2>/dev/null; true
+	@mv ${VSCODE_DIR} ${OLD_DOTFILES_DIR}/${DATE_DIR}/vs_code/keybindings.json 2>/dev/null; true
+	@rm -f ${VSCODE_DIR}/settings.json
+	@rm -f ${VSCODE_DIR}/keybindings.json
 	
 
 .PHONY: install_brew 
@@ -132,6 +140,14 @@ configure_git: backup ## add personal git configuration
 	@ln -s ${DOTFILES_DIR}/config/git/gitconfig ~/documents/private/.gitconfig
 	@mkdir -p ~/documents/visable/
 	@ln -s ${DOTFILES_DIR}/config/git/gitconfig ~/documents/visable/.gitconfig
+
+.PHONY: configure_vscode
+configure_vscode: ## add personal vscode configuration and extentions
+	@echo "install vscode extentions"
+	@sh -c "config/vscode/extentions.sh"
+	@echo "copy vscode settings"
+	@ln -s ${DOTFILES_DIR}/config/vscode/settings.json ${VSCODE_DIR}/settings.json
+	@ln -s ${DOTFILES_DIR}/config/vscode/settings.json ${VSCODE_DIR}/settings.json
 
 .PHONY: install_node
 install_node: install_asdf ## install programming language nodejs

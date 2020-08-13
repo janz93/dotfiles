@@ -1,0 +1,6 @@
+{
+    "window.zoomLevel": 1,
+    "explorer.confirmDragAndDrop": false,
+    "workbench.startupEditor": "newUntitledFile",
+    "explorer.confirmDelete": false
+}
