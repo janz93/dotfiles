@@ -53,6 +53,18 @@
         "options": {
           "full_name": "mattermost"
         }
+      },
+      "iterm2": {
+        "version": "3.3.12",
+        "options": {
+          "full_name": "iterm2"
+        }
+      },
+      "maccy": {
+        "version": "0.13.0",
+        "options": {
+          "full_name": "maccy"
+        }
       }
     }
   },
