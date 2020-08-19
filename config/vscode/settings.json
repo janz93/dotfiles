@@ -2,5 +2,6 @@
     "window.zoomLevel": 1,
     "explorer.confirmDragAndDrop": false,
     "workbench.startupEditor": "newUntitledFile",
-    "explorer.confirmDelete": false
+    "explorer.confirmDelete": false,
+    "terminal.integrated.fontFamily": "Meslo LG S for Powerline"
 }
