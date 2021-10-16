@@ -23,8 +23,8 @@ backup: ## backup exsiting dotfiles
 	done
 	@mv ~/documents/private/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
 	@rm -f ~/documents/private/.gitconfig
-	@mv ~/documents/visable/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
-	@rm -f ~/documents/visable/.gitconfig
+	@mv ~/documents/cerascreen/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
+	@rm -f ~/documents/cerascreen/.gitconfig
 	@mv ${VSCODE_DIR} ${OLD_DOTFILES_DIR}/${DATE_DIR}/vs_code/settings.json 2>/dev/null; true
 	@mv ${VSCODE_DIR} ${OLD_DOTFILES_DIR}/${DATE_DIR}/vs_code/keybindings.json 2>/dev/null; true
 	@rm -f ${VSCODE_DIR}/settings.json
@@ -181,7 +181,7 @@ install_ruby: install_asdf ## install programming language ruby
 	fi
 
 .PHONY: install_gems
-install_gems: install_ruby ## install global npm tooling
+install_gems: install_ruby ## install global ruby tooling
 	@echo "install gems"
 	@sh -c "install/gems.sh"
 
