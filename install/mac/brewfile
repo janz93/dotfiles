@@ -9,7 +9,4 @@ brew "jq"
 brew "heroku"
 brew "awscli"
 brew "pgcli"
-
-# visable
-tap "wlw/tools", "https://gitlab.visable.com/webdevs/homebrew-wlw.git"
-brew "wlw-devtools"
+brew "the_silver_searcher"

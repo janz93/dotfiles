@@ -10,6 +10,3 @@ cask "maccy"
 cask "spotify"
 cask "slack"
 cask "visual-studio-code"
-
-# visable
-cask "mattermost"
