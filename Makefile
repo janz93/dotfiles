@@ -1,6 +1,8 @@
 DOTFILES_DIR 		?= ~/.dotfiles
 DATE_DIR 			?= `date +%Y-%m-%d`
 OLD_DOTFILES_DIR 	?= ~/dotfiles_old
+PERSONAL_DIR		= personal
+WORK_DIR			= cerascreen
 DOT_FILES 			= gitconfig zshrc vim vimrc asdfrc
 OS_PLATFORM			:= $(shell uname)
 RUBY_VERSION		= 3.0.2
@@ -22,10 +24,10 @@ backup: ## backup exsiting dotfiles
 		mv ~/.$$file ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null ; true;\
 		rm -f ~/.$$file;\
 	done
-	@mv ~/documents/private/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
-	@rm -f ~/documents/private/.gitconfig
-	@mv ~/documents/cerascreen/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
-	@rm -f ~/documents/cerascreen/.gitconfig
+	@mv ~/documents/${PERSONAL_DIR}/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
+	@rm -f ~/documents/${PERSONAL_DIR}/.gitconfig
+	@mv ~/documents/${WORK_DIR}/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
+	@rm -f ~/documents/${WORK_DIR}/.gitconfig
 	@mv ${VSCODE_DIR} ${OLD_DOTFILES_DIR}/${DATE_DIR}/vs_code/settings.json 2>/dev/null; true
 	@mv ${VSCODE_DIR} ${OLD_DOTFILES_DIR}/${DATE_DIR}/vs_code/keybindings.json 2>/dev/null; true
 	@rm -f ${VSCODE_DIR}/settings.json
@@ -134,13 +136,15 @@ configure_vim: backup ## add personal vim configuration
 	@ln -s ${DOTFILES_DIR}/config/vim ~/.vim
 
 .PHONY: configure_git
-configure_git: backup ## add personal git configuration
-	@echo "copy personal git config" 
-	@ln -s ${DOTFILES_DIR}/config/git/gitconfig ~/.gitconfig
-	@mkdir -p ~/documents/private/
-	@ln -s ${DOTFILES_DIR}/config/git/gitconfig ~/documents/private/.gitconfig
-	@mkdir -p ~/documents/visable/
-	@ln -s ${DOTFILES_DIR}/config/git/gitconfig ~/documents/visable/.gitconfig
+configure_git: backup ## add git configuration
+	@echo "copy global git config" 
+	@ln -s ${DOTFILES_DIR}/config/git/global_gitconfig ~/.gitconfig
+	@echo "copy personal git config"
+	@mkdir -p ~/documents/${PERSONAL_DIR}/
+	@ln -s ${DOTFILES_DIR}/config/git/${PERSONAL_DIR}_gitconfig ~/documents/${PERSONAL_DIR}/.gitconfig
+	@echo "copy work config" 
+	@mkdir -p ~/documents/${WORK_DIR}/
+	@ln -s ${DOTFILES_DIR}/config/git/${WORK_DIR}_gitconfig ~/documents/${WORK_DIR}/.gitconfig
 
 .PHONY: configure_vscode
 configure_vscode: ## add personal vscode configuration and extentions
