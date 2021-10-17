@@ -3,8 +3,9 @@ DATE_DIR 			?= `date +%Y-%m-%d`
 OLD_DOTFILES_DIR 	?= ~/dotfiles_old
 DOT_FILES 			= gitconfig zshrc vim vimrc asdfrc
 OS_PLATFORM			:= $(shell uname)
-RUBY_VERSION		= 2.7.1
-NODEJS_VERSION		= 14.7.0
+RUBY_VERSION		= 3.0.2
+NODEJS_VERSION		= 14.18.1
+GOLANG_VERSION		= 1.17.2
 ifeq ($(OS_PLATFORM), Linux)
 	VSCODE_DIR = ~/.config/Code/User
 else
@@ -184,6 +185,18 @@ install_ruby: install_asdf ## install programming language ruby
 install_gems: install_ruby ## install global ruby tooling
 	@echo "install gems"
 	@sh -c "install/gems.sh"
+
+.PHONY: install_golang
+install_golang: install_asdf ## install programming language go
+	@if [[ $$(asdf plugin list) == *"go"* ]]; then\
+		echo "golang via asdf already available. Good job!";\
+	else\
+		echo "add golang to asdf";\
+		asdf plugin add golang;\
+		echo "install golang ${GOLANG_VERSION}";\
+		asdf install golang ${GOLANG_VERSION};\
+		asdf global golang ${GOLANG_VERSION};\
+	fi
 
 .PHONY: setup
 setup: backup install_brew install_zsh install_oh_my_zsh install_asdf install_tooling install_gems install_npm_packages configure_git configure_vim ## will setup your system
