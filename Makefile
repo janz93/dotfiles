@@ -52,8 +52,8 @@ install_brew: ## install brew if not already aviable
 			xcode-select —-install;\
 			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)";\
 			brew update;\
-			brew tap caskroom/cask;\
-			brew tap caskroom/versions;\
+			brew tap homebrew/cask;\
+			brew tap homebrew/cask-versions;\
 		fi;\
 	fi
 
