@@ -202,8 +202,12 @@ install_golang: install_asdf ## install programming language go
 		asdf global golang ${GOLANG_VERSION};\
 	fi
 
+.PHONY: install_languages
+setup:  install_node install_ruby install_golang ## will install all languages system
+	@echo "install languages"
+
 .PHONY: setup
-setup: backup install_brew install_zsh install_oh_my_zsh install_asdf install_tooling install_gems install_npm_packages configure_git configure_vim ## will setup your system
+setup: backup install_brew install_zsh install_oh_my_zsh install_asdf install_tooling install_languages install_npm_packages install_gems configure_git configure_vim ## will setup your system
 	@echo "everything should be good to go"
 	@exec $$SHELL
 
