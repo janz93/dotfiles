@@ -3,8 +3,8 @@
 [pager]
 	branch = false
 
-[includeIf "gitdir:~/documents/private/"]
-    path = ~/documents/private/.gitconfig
+[includeIf "gitdir:~/documents/personal/"]
+    path = ~/documents/personal/.gitconfig
 
 [includeIf "gitdir:~/documents/cerascreen/"]
     path = ~/documents/cerascreen/.gitconfig
