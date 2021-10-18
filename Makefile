@@ -123,7 +123,6 @@ install_asdf: backup install_brew install_zsh install_oh_my_zsh ## install asdf 
 		echo "install asdf";\
 		brew install asdf;\
 		echo "add asdf to you shell";\
-		echo -e '\n. $$(brew --prefix asdf)/asdf.sh' >> ~/.zshrc;\
 	fi
 	@echo "copy personal asdf config"
 	@cp ${DOTFILES_DIR}/config/.asdfrc ~/.asdfrc
