@@ -126,33 +126,33 @@ install_asdf: backup install_brew install_zsh install_oh_my_zsh ## install asdf 
 		echo -e '\n. $$(brew --prefix asdf)/asdf.sh' >> ~/.zshrc;\
 	fi
 	@echo "copy personal asdf config"
-	@ln -s ${DOTFILES_DIR}/config/.asdfrc ~/.asdfrc
+	@cp ${DOTFILES_DIR}/config/.asdfrc ~/.asdfrc
 
 
 .PHONY: configure_vim
 configure_vim: backup ## add personal vim configuration
 	@echo "copy personal vim config"
-	@ln -snf ${DOTFILES_DIR}/config/vim/vimrc ~/.vimrc
+	@cp ${DOTFILES_DIR}/config/vim/vimrc ~/.vimrc
 	@ln -s ${DOTFILES_DIR}/config/vim ~/.vim
 
 .PHONY: configure_git
 configure_git: backup ## add git configuration
 	@echo "copy global git config" 
-	@ln -s ${DOTFILES_DIR}/config/git/global_gitconfig ~/.gitconfig
+	@cp ${DOTFILES_DIR}/config/git/global_gitconfig ~/.gitconfig
 	@echo "copy personal git config"
 	@mkdir -p ~/documents/${PERSONAL_DIR}/
-	@ln -s ${DOTFILES_DIR}/config/git/${PERSONAL_DIR}_gitconfig ~/documents/${PERSONAL_DIR}/.gitconfig
+	@cp ${DOTFILES_DIR}/config/git/${PERSONAL_DIR}_gitconfig ~/documents/${PERSONAL_DIR}/.gitconfig
 	@echo "copy work config" 
 	@mkdir -p ~/documents/${WORK_DIR}/
-	@ln -s ${DOTFILES_DIR}/config/git/${WORK_DIR}_gitconfig ~/documents/${WORK_DIR}/.gitconfig
+	@cp ${DOTFILES_DIR}/config/git/${WORK_DIR}_gitconfig ~/documents/${WORK_DIR}/.gitconfig
 
 .PHONY: configure_vscode
 configure_vscode: ## add personal vscode configuration and extentions
 	@echo "install vscode extentions"
 	@sh -c "config/vscode/extentions.sh"
 	@echo "copy vscode settings"
-	@ln -s ${DOTFILES_DIR}/config/vscode/settings.json ${VSCODE_DIR}/settings.json
-	@ln -s ${DOTFILES_DIR}/config/vscode/settings.json ${VSCODE_DIR}/settings.json
+	@cp ${DOTFILES_DIR}/config/vscode/settings.json ${VSCODE_DIR}/settings.json
+	@cp ${DOTFILES_DIR}/config/vscode/settings.json ${VSCODE_DIR}/settings.json
 
 .PHONY: install_node
 install_node: install_asdf ## install programming language nodejs
