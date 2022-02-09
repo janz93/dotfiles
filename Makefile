@@ -137,13 +137,13 @@ configure_vim: backup ## add personal vim configuration
 .PHONY: configure_git
 configure_git: backup ## add git configuration
 	@echo "copy global git config" 
-	@cp ${DOTFILES_DIR}/config/git/global_gitconfig ~/.gitconfig
+	@ln -s ${DOTFILES_DIR}/config/git/global_gitconfig ~/.gitconfig
 	@echo "copy personal git config"
 	@mkdir -p ~/documents/${PERSONAL_DIR}/
-	@cp ${DOTFILES_DIR}/config/git/${PERSONAL_DIR}_gitconfig ~/documents/${PERSONAL_DIR}/.gitconfig
+	@ln -s ${DOTFILES_DIR}/config/git/${PERSONAL_DIR}_gitconfig ~/documents/${PERSONAL_DIR}/.gitconfig
 	@echo "copy work config" 
 	@mkdir -p ~/documents/${WORK_DIR}/
-	@cp ${DOTFILES_DIR}/config/git/${WORK_DIR}_gitconfig ~/documents/${WORK_DIR}/.gitconfig
+	@ln -s ${DOTFILES_DIR}/config/git/${WORK_DIR}_gitconfig ~/documents/${WORK_DIR}/.gitconfig
 
 .PHONY: configure_vscode
 configure_vscode: ## add personal vscode configuration and extentions
@@ -202,11 +202,11 @@ install_golang: install_asdf ## install programming language go
 	fi
 
 .PHONY: install_languages
-setup:  install_node install_ruby install_golang ## will install all languages system
+install_languages:  install_node install_ruby install_golang ## will install all languages system
 	@echo "install languages"
 
 .PHONY: setup
-setup: backup install_brew install_zsh install_oh_my_zsh install_asdf install_tooling install_languages install_npm_packages install_gems configure_git configure_vim ## will setup your system
+setup: backup install_zsh install_oh_my_zsh configure_git configure_vim ## will setup your system
 	@echo "everything should be good to go"
 	@exec $$SHELL
 
