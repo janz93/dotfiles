@@ -13,13 +13,13 @@ There's some simple statements for different operating systems: OS X and Linux. 
 
 ## Install
 ```bash
-bash -c "`curl -fsSL https://raw.githubusercontent.com/webpro/dotfiles/master/remote-install.sh`"
+bash -c "`curl -fsSL https://github.com/janz93/dotfiles/master/remote-install.sh`"
 ```
 This will clone (using `git`), or download (using `curl` or `wget`), this repo to `~/.dotfiles`. Alternatively, clone manually into the desired location:
 
 
 ```bash
-git clone https://github.com/webpro/dotfiles.git ~/dotfiles
+git clone https://github.com/janz93/dotfiles.git ~/dotfiles
 ```
 
 Use the [Makefile](./Makefile) to install everything [listed above](#package-overview), and symlink [runcom](./runcom) and [config](./config) (using [stow](https://www.gnu.org/software/stow/)):
