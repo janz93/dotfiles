@@ -1,13 +1,14 @@
 DOTFILES_DIR 		?= ~/.dotfiles
 DATE_DIR 			?= `date +%Y-%m-%d`
-OLD_DOTFILES_DIR 	?= ~/dotfiles_old
+OLD_DOTFILES_DIR 	?= ~/.dotfiles_old
 PERSONAL_DIR		= personal
-WORK_DIR			= cerascreen
+WORK_DIR			= railslove
 DOT_FILES 			= gitconfig zshrc vim vimrc asdfrc
 OS_PLATFORM			:= $(shell uname)
-RUBY_VERSION		= 3.0.2
-NODEJS_VERSION		= 14.18.1
-GOLANG_VERSION		= 1.17.2
+RUBY_VERSION		= 3.2.0
+NODEJS_VERSION		= 19.5.0
+GOLANG_VERSION		= 1.20.0
+TERRAFORM_VERSION	= 1.3.7
 ifeq ($(OS_PLATFORM), Linux)
 	VSCODE_DIR = ~/.config/Code/User
 else
@@ -24,10 +25,10 @@ backup: ## backup exsiting dotfiles
 		mv ~/.$$file ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null ; true;\
 		rm -f ~/.$$file;\
 	done
-	@mv ~/documents/${PERSONAL_DIR}/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
-	@rm -f ~/documents/${PERSONAL_DIR}/.gitconfig
-	@mv ~/documents/${WORK_DIR}/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
-	@rm -f ~/documents/${WORK_DIR}/.gitconfig
+	@mv ~/Documents/${PERSONAL_DIR}/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
+	@rm -f ~/Documents/${PERSONAL_DIR}/.gitconfig
+	@mv ~/Documents/${WORK_DIR}/.gitconfig ${OLD_DOTFILES_DIR}/${DATE_DIR} 2>/dev/null; true
+	@rm -f ~/Documents/${WORK_DIR}/.gitconfig
 	@mv ${VSCODE_DIR} ${OLD_DOTFILES_DIR}/${DATE_DIR}/vs_code/settings.json 2>/dev/null; true
 	@mv ${VSCODE_DIR} ${OLD_DOTFILES_DIR}/${DATE_DIR}/vs_code/keybindings.json 2>/dev/null; true
 	@rm -f ${VSCODE_DIR}/settings.json
@@ -139,11 +140,11 @@ configure_git: backup ## add git configuration
 	@echo "copy global git config" 
 	@cp ${DOTFILES_DIR}/config/git/global_gitconfig ~/.gitconfig
 	@echo "copy personal git config"
-	@mkdir -p ~/documents/${PERSONAL_DIR}/
-	@cp ${DOTFILES_DIR}/config/git/${PERSONAL_DIR}_gitconfig ~/documents/${PERSONAL_DIR}/.gitconfig
+	@mkdir -p ~/Documents/${PERSONAL_DIR}/
+	@cp ${DOTFILES_DIR}/config/git/${PERSONAL_DIR}_gitconfig ~/Documents/${PERSONAL_DIR}/.gitconfig
 	@echo "copy work config" 
-	@mkdir -p ~/documents/${WORK_DIR}/
-	@cp ${DOTFILES_DIR}/config/git/${WORK_DIR}_gitconfig ~/documents/${WORK_DIR}/.gitconfig
+	@mkdir -p ~/Documents/${WORK_DIR}/
+	@cp ${DOTFILES_DIR}/config/git/${WORK_DIR}_gitconfig ~/Documents/${WORK_DIR}/.gitconfig
 
 .PHONY: configure_vscode
 configure_vscode: ## add personal vscode configuration and extentions
@@ -201,6 +202,18 @@ install_golang: install_asdf ## install programming language go
 		asdf global golang ${GOLANG_VERSION};\
 	fi
 
+.PHONY: install_terraform
+install_terraform: install_asdf ## install programming language go
+	@if [[ $$(asdf plugin list) == *"terraform"* ]]; then\
+		echo "terraform via asdf already available. Good job!";\
+	else\
+		echo "add terraform to asdf";\
+		asdf plugin add terraform;\
+		echo "install terraform ${TERRAFORM_VERSION}";\
+		asdf install terraform ${TERRAFORM_VERSION};\
+		asdf global terraform ${TERRAFORM_VERSION};\
+	fi
+
 .PHONY: install_languages
 setup:  install_node install_ruby install_golang ## will install all languages system
 	@echo "install languages"
@@ -213,9 +226,9 @@ setup: backup install_brew install_zsh install_oh_my_zsh install_asdf install_to
 .PHONY: update_dynamic_configs
 update_dynamic_configs: ## Here the current version of the dictionary and brew lock files will be commited
 	@cp ~/.vim/spell/* config/vim/spell/
-	@cp ~/.dotfiles/install/mac/brewfile.lock.json install/mac/brewfile.lock.json
+	@cp ${DOTFILES_DIR}/install/mac/brewfile.lock.json install/mac/brewfile.lock.json
 	@if [[ ${OS_PLATFORM} == 'Darwin' ]]; then\
-		cp ~/.dotfiles/install/mac/brewcask.lock.json install/mac/brewcask.lock.json;\
+		cp ${DOTFILES_DIR}/install/mac/brewcask.lock.json install/mac/brewcask.lock.json;\
 	fi
 
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
