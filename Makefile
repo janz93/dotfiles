@@ -214,7 +214,7 @@ install_terraform: install_asdf ## install programming language go
 	fi
 
 .PHONY: install_languages
-setup:  install_node install_ruby install_golang ## will install all languages system
+setup: install_node install_ruby install_golang ## will install all languages system
 	@echo "install languages"
 
 .PHONY: setup
