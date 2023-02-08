@@ -1,13 +1,14 @@
 tap "heroku/brew"
 
 # global
+brew "asdf"
+brew "awscli"
 brew "coreutils"
 brew "curl"
+brew "gh"
 brew "git"
-brew "asdf"
-brew "jq"
+brew "gnupg"
 brew "heroku"
-brew "awscli"
+brew "jq"
 brew "pgcli"
 brew "the_silver_searcher"
-brew "gnupg"
