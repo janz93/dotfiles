@@ -3,8 +3,8 @@
 [pager]
 	branch = false
 
-[includeIf "gitdir:~/documents/personal/"]
-    path = ~/documents/personal/.gitconfig
+[includeIf "gitdir:~/Documents/personal/"]
+    path = ~/Documents/personal/.gitconfig
 
-[includeIf "gitdir:~/documents/work/"]
-    path = ~/documents/work/.gitconfig
+[includeIf "gitdir:~/Documents/work/"]
+    path = ~/Documents/work/.gitconfig
