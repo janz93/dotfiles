@@ -1,4 +1,5 @@
 tap "heroku/brew"
+tap "lotyp/homebrew-formulae"
 
 # global
 brew "asdf"
@@ -10,5 +11,6 @@ brew "git"
 brew "gnupg"
 brew "heroku"
 brew "jq"
+brew "lotyp/formulae/dockutil"
 brew "pgcli"
 brew "the_silver_searcher"
