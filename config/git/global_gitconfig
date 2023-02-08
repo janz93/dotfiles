@@ -6,5 +6,5 @@
 [includeIf "gitdir:~/documents/personal/"]
     path = ~/documents/personal/.gitconfig
 
-[includeIf "gitdir:~/documents/cerascreen/"]
-    path = ~/documents/cerascreen/.gitconfig
+[includeIf "gitdir:~/documents/work/"]
+    path = ~/documents/work/.gitconfig
