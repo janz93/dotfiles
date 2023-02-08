@@ -7,7 +7,7 @@ DOT_FILES 			= gitconfig zshrc vim vimrc asdfrc
 OS_PLATFORM			:= $(shell uname)
 RUBY_VERSION		= 3.2.0
 NODEJS_VERSION		= 19.5.0
-GOLANG_VERSION		= 1.20.0
+GOLANG_VERSION		= 1.20
 TERRAFORM_VERSION	= 1.3.7
 ifeq ($(OS_PLATFORM), Linux)
 	VSCODE_DIR = ~/.config/Code/User
