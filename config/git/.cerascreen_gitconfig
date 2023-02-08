@@ -1,9 +1,0 @@
-[user]
-	name = Jan Zaydowicz
-	email = jan.zaydowicz@cerascreen.de
-
-[core]
-	editor = vim
-
-[color]
-	ui = true

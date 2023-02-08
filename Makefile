@@ -141,9 +141,15 @@ configure_git: backup ## add git configuration
 	@echo "copy personal git config"
 	@mkdir -p ~/Documents/${PERSONAL_DIR}/
 	@ln -s ${DOTFILES_DIR}/config/git/${PERSONAL_DIR}_gitconfig ~/Documents/${PERSONAL_DIR}/.gitconfig
-	@echo "copy work config" 
+	@echo "setup work git config" 
 	@mkdir -p ~/Documents/${WORK_DIR}/
-	@ln -s ${DOTFILES_DIR}/config/git/${WORK_DIR}_gitconfig ~/Documents/${WORK_DIR}/.gitconfig
+	@echo "Setup your git author;\
+	read -p Name: git_username; \
+	read -p Email: git_email; \
+    echo "[user]\n\
+		name = $${git_username:-"Jan Zaydowicz"}\n\
+		email = $${git_email}\n\
+		" > ~/Documents/${WORK_DIR}/.gitconfig
 
 .PHONY: configure_vscode
 configure_vscode: ## add personal vscode configuration and extentions
