@@ -2,6 +2,10 @@
 	ff = only
 [pager]
 	branch = false
+[core]
+	editor = vim
+[color]
+	ui = true
 
 [includeIf "gitdir:~/Documents/personal/"]
     path = ~/Documents/personal/.gitconfig
