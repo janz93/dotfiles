@@ -148,7 +148,7 @@ configure_git: backup ## add git configuration
 .PHONY: configure_vscode
 configure_vscode: ## add personal vscode configuration and extentions
 	@echo "install vscode extentions"
-	@sh -c "config/vscode/extentions.sh"
+	@sh -c "${DOTFILES_DIR}/config/vscode/extentions.sh"
 	@echo "copy vscode settings"
 	@cp ${DOTFILES_DIR}/config/vscode/settings.json ${VSCODE_DIR}/settings.json
 	@cp ${DOTFILES_DIR}/config/vscode/settings.json ${VSCODE_DIR}/settings.json
