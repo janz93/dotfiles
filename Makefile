@@ -151,7 +151,7 @@ configure_vscode: ## add personal vscode configuration and extentions
 	@sh -c "${DOTFILES_DIR}/config/vscode/extentions.sh"
 	@echo "copy vscode settings"
 	@cp ${DOTFILES_DIR}/config/vscode/settings.json ${VSCODE_DIR}/settings.json
-	@cp ${DOTFILES_DIR}/config/vscode/settings.json ${VSCODE_DIR}/settings.json
+	@cp ${DOTFILES_DIR}/config/vscode/keybindings.json ${VSCODE_DIR}/keybindings.json
 
 .PHONY: install_node
 install_node: install_asdf ## install programming language nodejs
