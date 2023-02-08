@@ -50,11 +50,10 @@ install_brew: ## install brew if not already aviable
 		if [ -f /usr/local/Homebrew/bin/brew ]; then\
 			echo "Homebrew already available. Good Bier!";\
 		else\
-			xcode-select —-install;\
-			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)";\
+			echo "download brew";\
+			/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)";\
+			echo "update brew";\
 			brew update;\
-			brew tap homebrew/cask;\
-			brew tap homebrew/cask-versions;\
 		fi;\
 	fi
 
